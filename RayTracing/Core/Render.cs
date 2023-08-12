@@ -20,14 +20,12 @@ namespace RayTracing.Core
                 {
                     Console.WriteLine("\rScanlines remaining: " + (ImageHeight - j));
 
-                    var red = (double)i / (ImageWidth - 1);
-                    var green = (double)j / (ImageHeight - 1);
-                    var blue = 0;
-
-                    var ired = (int) (ToIConversionFactor * red);
-                    var igreen = (int) (ToIConversionFactor * green);
-                    var iblue = (int) (ToIConversionFactor * blue);
-                    await stream.WriteLineAsync($"{ired} {igreen} {iblue}");
+                    var red = (float)i / (ImageWidth - 1);
+                    var green = (float)j / (ImageHeight - 1);
+                    var blue = 0f;
+                    
+                    var color = new Vec3(red, green, blue);
+                    await Color.WriteColor(stream, color);
                 }
             }
             Console.WriteLine("Done! Access on: " + Path.GetFullPath(ImageName));

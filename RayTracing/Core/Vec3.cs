@@ -2,28 +2,28 @@
 {
     public struct Vec3
     {
-        private static readonly float[] Vector = new float[3];
+        private readonly double[] _vector = new double[3];
      
         public Vec3()
         {
-            Vector[0] = 0;
-            Vector[1] = 0;
-            Vector[2] = 0;
+            _vector[0] = 0;
+            _vector[1] = 0;
+            _vector[2] = 0;
         }
-        public Vec3(float e0, float e1, float e2)
+        public Vec3(double e0, double e1, double e2)
         {
-            Vector[0] = e0;
-            Vector[1] = e1;
-            Vector[2] = e2;
+            _vector[0] = e0;
+            _vector[1] = e1;
+            _vector[2] = e2;
         }
         
-        public float X => Vector[0]; 
-        public float Y => Vector[1]; 
-        public float Z => Vector[2];
+        public double X => _vector[0]; 
+        public double Y => _vector[1]; 
+        public double Z => _vector[2];
 
-        public static float Get(int i)
+        public double Get(int i)
         {
-            return Vector[i];
+            return _vector[i];
         }
         
         public static double Dot(Vec3 u, Vec3 v) {
@@ -47,10 +47,17 @@
 
         public Vec3 Increment(Vec3 add)
         {
-            Vector[0] += add.X;
-            Vector[1] += add.Y;
-            Vector[2] += add.Z;
+            _vector[0] += add.X;
+            _vector[1] += add.Y;
+            _vector[2] += add.Z;
             return this;
+        }
+
+        public static Vec3 Ray_color(Ray ray)
+        {
+            var unitDirection = Unit_vector(ray.Direction);
+            var lerp = 0.5 * (unitDirection.Y + 1.0);
+            return (1.0 - lerp) * new Vec3(1.0, 1.0, 1.0) + lerp * new Vec3(0.5, 0.7, 1.0);
         }
 
         public static Vec3 operator --(Vec3 left)
@@ -68,7 +75,12 @@
             return new Vec3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
         }
 
-        public static Vec3 operator *(Vec3 left, float t)
+        public static Vec3 operator *(Vec3 left, double t)
+        {
+            return new Vec3(left.X * t, left.Y * t, left.Z * t);
+        }
+        
+        public static Vec3 operator *(double t, Vec3 left)
         {
             return new Vec3(left.X * t, left.Y * t, left.Z * t);
         }
@@ -78,13 +90,18 @@
             return new Vec3(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
         }
 
-        public static Vec3 operator / (Vec3 left, float right)
+        public static Vec3 operator / (Vec3 left, double right)
         {
-            return left * (1 / right);
+            return (1 / right) * left;
         }
-        
-        float Length() => (float) Math.Sqrt(SquaredLength());
-        float SquaredLength() => Vector[0] * Vector[0] + Vector[1] * Vector[1] + Vector[2] * Vector[2];
+
+        double Length()
+        {
+            var result = Math.Sqrt(SquaredLength());
+            return double.IsNaN(result) ? 1 : result;
+        }
+
+        double SquaredLength() => _vector[0] * _vector[0] + _vector[1] * _vector[1] + _vector[2] * _vector[2];
 
     }
 }

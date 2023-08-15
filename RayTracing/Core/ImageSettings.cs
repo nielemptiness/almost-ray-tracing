@@ -2,9 +2,8 @@
 
 namespace RayTracing.Core
 {
-    public class ImageSettings
+    public static class Constants
     {
         public const double ViewportHeight = 2.0;
-        public const double FocalLength = 1.0;
     }
 }

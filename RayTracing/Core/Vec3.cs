@@ -55,9 +55,22 @@
 
         public static Vec3 Ray_color(Ray ray)
         {
+            if (IsHitOnSphere(new Vec3(0, 0, -1), 0.2, ray))
+                return new Vec3(1, 0, 0);
+            
             var unitDirection = Unit_vector(ray.Direction);
             var lerp = 0.5 * (unitDirection.Y + 1.0);
             return (1.0 - lerp) * new Vec3(1.0, 1.0, 1.0) + lerp * new Vec3(0.5, 0.7, 1.0);
+        }
+
+        public static bool IsHitOnSphere(Vec3 center, double radius, Ray ray)
+        {
+            var oc = ray.Origin - center;
+            var a = Dot(ray.Direction, ray.Direction);
+            var b = 2.0 * Dot(oc, ray.Direction);
+            var c = Dot(oc, oc) - radius * radius;
+            var discriminant = b * b - 4 * a * c;
+            return discriminant >= 0;
         }
 
         public static Vec3 operator --(Vec3 left)
